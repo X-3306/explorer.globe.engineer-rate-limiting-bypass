@@ -40,13 +40,15 @@ model=X
 Parameter Identification: The first step was checking the possibility of modifying the content of the find_query="example" parameter
 Bypass Attempt: I changed the value from model=basic to model=premium (the premium model was supposed to contain only 5 free uses)
 Successful Bypass: The system accepted the request without any authorization verification
+
 Verification: I received a response on screen confirming access to premium features
 
 # Proof of Concept Implementation
 The next step was writing a simple Python script enabling unlimited generation of premium content for free locally. Key implementation elements:
+
 Setting response.headers['Access-Control-Allow-Origin'] = '*'
-Random generation of new find_id with each query
-API connection using appropriately formatted URL.
+ Random generation of new find_id with each query
+ API connection using appropriately formatted URL.
 
 # Sample URLs (anonymized):
 Premium Mode:
@@ -56,19 +58,24 @@ url = f"https://example.dev.api/submitSearch?query={encoded_query}\",[...anonymi
 
 # Technical Implementation:
 Since responses were transmitted in Server-Sent Events (SSE) format, I created a simple HTML file with JavaScript code to interpret the received values.
+
 Note: Specific implementation details have been omitted for security reasons, but here is a Proof of Concept (POC): https://youtu.be/7v2pxOsN56U 
 
 # Summary:
 The described vulnerability enables:
+
 Bypassing rate limiting restrictions
+
 Unlimited access to premium and research premium features
+
 Resource utilization without proper authorization
+
 Commercial exploitation and unfair competition: The vulnerability enables third parties to create competing services or resell premium features without authorization, potentially undermining the original service's business model
 
 # Key Recommendations for Patching the Vulnerability:
 Implement server-side verification: Check user permissions before processing requests
-Hide backend logic: Avoid exposing internal API endpoints
-Implement proper rate limiting: Protection at server level, not just client-side
-Monitoring and logging: Track unusual usage patterns
+ Hide backend logic: Avoid exposing internal API endpoints
+ Implement proper rate limiting: Protection at server level, not just client-side
+ Monitoring and logging: Track unusual usage patterns
 
 ## This article was prepared in accordance with Responsible Disclosure principles and is solely for educational purposes.
