@@ -52,7 +52,7 @@ url = f"https://example.dev.api/submitSearch?query={encoded_query}\",[...anonymi
 
 # Technical Implementation:
 Since responses were transmitted in Server-Sent Events (SSE) format, I created a simple HTML file with JavaScript code to interpret the received values.
-Note: Specific implementation details have been omitted for security reasons, but here is a Proof of Concept (POC): ### https://youtu.be/7v2pxOsN56U ###
+Note: Specific implementation details have been omitted for security reasons, but here is a Proof of Concept (POC): https://youtu.be/7v2pxOsN56U 
 
 # Summary:
 The described vulnerability enables:
