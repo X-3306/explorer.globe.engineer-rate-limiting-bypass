@@ -73,9 +73,12 @@ Resource utilization without proper authorization
 Commercial exploitation and unfair competition: The vulnerability enables third parties to create competing services or resell premium features without authorization, potentially undermining the original service's business model
 
 # Key Recommendations for Patching the Vulnerability:
+
 Implement server-side verification: Check user permissions before processing requests
  Hide backend logic: Avoid exposing internal API endpoints
+ 
  Implement proper rate limiting: Protection at server level, not just client-side
+ 
  Monitoring and logging: Track unusual usage patterns
 
 ## This article was prepared in accordance with Responsible Disclosure principles and is solely for educational purposes.
