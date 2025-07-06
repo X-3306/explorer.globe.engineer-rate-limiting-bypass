@@ -11,9 +11,13 @@ The purpose is solely education and raising security awareness
 
 # Disclosure Timeline:
  02.11.2024 - Informed the site creators directly via the provided email address
+ 
  04.11.2024 - After no response, informed about the message on Discord platform. Received confirmation that the team would look into the issue
+ 
  10.12.2024 - After continued lack of response, informed about planned article publication
+ 
  06.07.2025 - Article publication date (continued lack of response from the team)
+ 
 Despite following all steps regarding secure and responsible disclosure of security vulnerability information, as of the publication date (06.07.2025) the vulnerability remains active.
 
 CVSS Score: 7.5 (High) - AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N
