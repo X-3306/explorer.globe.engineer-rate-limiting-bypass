@@ -27,9 +27,13 @@ Vulnerability Type: Authorization Bypass + Rate Limiting Evasion Root Cause: Lac
 While using the website, out of curiosity I examined the network connections. During searching, I noticed a request sent to the domain example.dev.api, which later turned out to be an API (first mistake - visible frontend to backend communication).
 After analyzing the request, I identified the following parameters:
 find_id
+
 find_query
+
 id_user
+
 id_local
+
 model=X
 
 # Exploitation Process:
