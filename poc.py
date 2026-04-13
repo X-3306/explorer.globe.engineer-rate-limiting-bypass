@@ -20,7 +20,7 @@ def proxy():
     encoded_query = requests.utils.quote(query)
     search_id = str(uuid.uuid4())
 
-
+# diffrent url for turbo mode -->
 #turbo mode:  -   url = f"https://explorer-search.fly.dev/submitSearch?queryData=%5B%7B\"searchbox_query\"%3A\"{encoded_query}\"%2C\"search_id\"%3A\"{search_id}\"%2C\"index%22%3A0%2C%22type%22%3A%22initial_searchbox%22%2C%22clicked_category%22%3Anull%2C%22staged_image%22%3Anull%2C%22location%22%3Anull%7D%5D&userid_auth="YOUR AUTH USERID HERE"&userid_local="YOUR LOCAL USERID HERE"&model=turbo&search_id={search_id}"
 
 #advanced mode:    
