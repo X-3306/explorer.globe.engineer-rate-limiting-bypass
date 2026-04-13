@@ -85,4 +85,6 @@ Implement server-side verification: Check user permissions before processing req
  
  Monitoring and logging: Track unusual usage patterns
 
+ ### More HERE: [Medium](https://medium.com/@X-3306/api-rate-limiting-bypass-leading-to-unlimited-access-to-premium-features-in-explorer-globe-engineer-63583dd08f07)
+
 ## This article was prepared in accordance with Responsible Disclosure principles and is solely for educational purposes.
