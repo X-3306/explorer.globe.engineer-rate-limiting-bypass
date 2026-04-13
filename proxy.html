@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+        }
+
+        body {
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .header {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+        }
+
+        h1 {
+            color: #58a6ff;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            color: #c9d1d9;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            background: #238636;
+            color: #ffffff;
+            border: 1px solid rgba(240,246,252,0.1);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2ea043;
+        }
+
+        #output {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .top-answer {
+            padding: 1rem;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            color: #8b949e;
+            white-space: pre-wrap;
+        }
+
+        .line {
+            padding: 0.25rem 0;
+            border-left: 2px solid transparent;
+            padding-left: calc(0.5rem + var(--depth, 0) * 1.5rem);
+            white-space: pre-wrap;
+            color: #8b949e;
+        }
+
+        .line:hover {
+            background: #161b22;
+            border-left-color: #58a6ff;
+        }
+
+        .leaf {
+            color: #c9d1d9;
+        }
+
+        .leaf::before {
+            content: "•";
+            color: #58a6ff;
+            margin-right: 0.5rem;
+        }
+
+        
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .image-card {
+            position: relative;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .image-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px 4px 0 0;
+            border: none;
+            margin: 0;
+            cursor: pointer;
+            transition: filter 0.2s ease;
+        }
+
+        .image-card:hover img {
+            filter: brightness(1.1);
+        }
+
+        .image-info {
+            padding: 0.75rem;
+            background: #161b22;
+            font-size: 0.8rem;
+            color: #8b949e;
+        }
+
+        .image-title {
+            color: #58a6ff;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .error {
+            color: #ff7b72;
+            padding: 1rem;
+            background: #161b22;
+            border: 1px solid #f85149;
+            border-radius: 6px;
+        }
+
+        .stream-end {
+            color: #8b949e;
+            padding: 0.5rem;
+            margin-top: 1rem;
+            border-top: 1px solid #30363d;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+
+            .image-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .image-card {
+            animation: fadeIn 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Wyszukiwarka</h1>
+        <div class="search-container">
+            <input type="text" id="query" placeholder="Wpisz zapytanie...">
+            <button onclick="search()">Szukaj</button>
+        </div>
+    </div>
+    <div id="output"></div>
+
+    <script>
+        function getParentUrl(url) {
+            try {
+                const urlObj = new URL(url);
+                const pathParts = urlObj.pathname.split('/');
+                pathParts.pop();
+                urlObj.pathname = pathParts.join('/');
+                return urlObj.toString();
+            } catch (e) {
+                return url;
+            }
+        }
+
+        async function search() {
+            const query = document.getElementById('query').value;
+            const output = document.getElementById('output');
+            output.innerHTML = '';
+
+            if (!query) {
+                output.innerHTML = `<div class="error">Wpisz zapytanie</div>`;
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/proxy?query=${query}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                let isInTopAnswer = false;
+                let topAnswerContent = '';
+                let currentGallery = null;
+
+                data.forEach(item => {
+                    const element = document.createElement('div');
+                    
+                    switch (item.type) {
+                        case 'top_answer_chunk':
+                            isInTopAnswer = true;
+                            topAnswerContent = item.data || '';
+                            break;
+
+                        case 'end_top_answer_chunk':
+                            if (isInTopAnswer && topAnswerContent) {
+                                const topAnswerElement = document.createElement('div');
+                                topAnswerElement.classList.add('top-answer');
+                                topAnswerElement.textContent = topAnswerContent;
+                                output.appendChild(topAnswerElement);
+                            }
+                            isInTopAnswer = false;
+                            topAnswerContent = '';
+                            return;
+
+                        case 'line':
+                            element.classList.add('line');
+                            const depth = item.data.path 
+                            element.style.setProperty('--depth', depth);
+                            
+                            if (item.data.isLeaf) {
+                                element.classList.add("leaf");
+                            }
+
+                            element.textContent = item.data.line;
+                            break;
+
+                        case 'image':
+                            if (item.data.images && item.data.images.length > 0) {
+                                if (!currentGallery) {
+                                    currentGallery = document.createElement('div');
+                                    currentGallery.classList.add('image-gallery');
+                                    output.appendChild(currentGallery);
+                                }
+
+                                const card = document.createElement('div');
+                                card.classList.add('image-card');
+
+                                const undefined = document.createElement('undefined');
+                                card.classList.add('image-card');
+
+                                const img = document.createElement('img');
+                                img.src = item.data.images[0].thumbnailUrl;
+                                img.alt = item.data.query;
+                                
+                                const info = document.createElement('div');
+                                info.classList.add('image-info');
+                                
+                                const title = document.createElement('div');
+                                title.classList.add('image-title');
+                                title.textContent = item.data.query || 'Obraz';
+                                
+                                info.appendChild(title);
+                                card.appendChild(img);
+                                card.appendChild(info);
+
+                                
+                                card.onclick = function() {
+                                    const parentUrl = getParentUrl(item.data.images[0].thumbnailUrl);
+                                    window.open(parentUrl, '_blank');
+                                };
+
+                                currentGallery.appendChild(card);
+                                return;
+                            }
+                            break;
+
+                        case 'stream-end':
+                            element.classList.add('stream-end');
+                            element.textContent = 'Koniec wyników';
+                            currentGallery = null; 
+                            break;
+
+                        
+                    }
+                    
+                    if ((element.textContent || element.children.length > 0) && !isInTopAnswer) {
+                        output.appendChild(element);
+                    }
+                });
+
+            } catch (error) {
+                output.innerHTML = `<div class="error">Wystąpił błąd: ${error.message}</div>`;
+            }
+        }
+
+        
+        document.getElementById('query').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                search();
+            }
+        });
+    </script>
+</body>
+</html>
