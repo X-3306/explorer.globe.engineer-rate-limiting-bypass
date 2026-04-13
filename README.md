@@ -1,5 +1,7 @@
 ### API Rate Limiting Bypass Leading to Unlimited Access to Premium Features in explorer.globe.engineer
 
+## UPDATE: since the site is no longer functional I share full PoC code that I used (update time: 13.04.2026 UTC+2)
+
 https://youtu.be/7v2pxOsN56U
 
 # Legal and Ethical Disclaimer:
